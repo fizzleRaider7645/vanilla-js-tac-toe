@@ -1,19 +1,63 @@
+let turns = 0
+
+const tokens = ['X', 'O']
+
 const gameState = [
   ['', '', ''],
   ['', '', ''],
   ['', '', ''],
 ]
 
-const postions = [
-  [0, 0],
-  [0, 1],
-  [0, 2],
-  [1, 0],
-  [1, 1],
-  [1, 2],
-  [2, 0],
-  [2, 1],
-  [2, 2],
+const getGameStateValue = ([i, j]) => {
+  console.log(gameState[i][j])
+  return gameState[i][j]
+}
+
+const updateGameState = ([i, j], token) => {
+  gameState[i][j] = token
+}
+
+const winCombinations = [
+  [
+    [0, 0],
+    [0, 1],
+    [0, 2],
+  ],
+  [
+    [1, 0],
+    [1, 1],
+    [1, 2],
+  ],
+  [
+    [2, 0],
+    [2, 1],
+    [2, 2],
+  ],
+  [
+    [0, 0],
+    [1, 0],
+    [2, 0],
+  ],
+  [
+    [0, 1],
+    [1, 1],
+    [2, 1],
+  ],
+  [
+    [0, 2],
+    [1, 2],
+    [2, 2],
+  ],
+  [
+    [0, 0],
+    [1, 1],
+    [2, 2],
+  ],
+  [
+    [0, 2],
+    [1, 1],
+    [2, 0],
+  ],
 ]
 
 const initializeBoard = () => {
@@ -47,6 +91,7 @@ const initializeBoard = () => {
       const cellId = [i, j]
       cell.id = cellId
       cell.innerHTML = gameState[i][j]
+      // cell.innerHTML = [i, j]
       cell.onclick = () => placeToken(cellId)
       row.appendChild(cell)
     }
@@ -54,10 +99,30 @@ const initializeBoard = () => {
   }
 }
 
+const winner = () => {
+  for (let i = 0; i < winCombinations.length; i++) {
+    const combo = winCombinations[i]
+    console.log(combo)
+  }
+}
+
+const draw = () => {
+  return turns === 8
+}
+
 const placeToken = ([i, j]) => {
-  gameState[i][j] = 'X'
+  console.log(winner())
+  // if (getGameStateValue([i, j])) {
+  // alert('Position Taken!')
+  // } else if (draw()) {
+  // alert('Draw!')
+  // } else {
+  turns += 1
+  const currentUserToken = turns % 2 !== 0 ? tokens[0] : tokens[1]
+  updateGameState([i, j], currentUserToken)
   document.getElementById('board').innerHTML = ''
   initializeBoard()
+  // }
 }
 
 initializeBoard()
