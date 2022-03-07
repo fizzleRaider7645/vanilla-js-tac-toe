@@ -8,6 +8,15 @@ const gameState = [
   ['', '', ''],
 ]
 
+const clearGameState = () => {
+  for (let i = 0; i < gameState.length; i++) {
+    for (let j = 0; j < gameState[i].length; j++) {
+      gameState[i][j] = ''
+    }
+  }
+  turns = 0
+}
+
 const updateGameState = ([i, j], token) => {
   gameState[i][j] = token
 }
@@ -104,25 +113,38 @@ const initializeBoard = () => {
       const cellId = [i, j]
       cell.id = cellId
       cell.innerHTML = gameState[i][j]
-      cell.onclick = () => placeToken(cellId)
+      cell.onclick = () => play(cellId)
       row.appendChild(cell)
     }
     board.appendChild(row)
   }
 }
 
-const draw = () => {
+const isDraw = () => {
   return turns === 8 && !winner()
 }
 
-const placeToken = ([i, j]) => {
+const play = ([i, j]) => {
   if (getGameStateValue([i, j])) return
   turns += 1
   const currentUserToken = turns % 2 !== 0 ? tokens[0] : tokens[1]
   updateGameState([i, j], currentUserToken)
-  console.log(winner())
   document.getElementById('board').innerHTML = ''
   initializeBoard()
+
+  if (isDraw()) {
+    alert('Draw!')
+    clearGameState()
+    document.getElementById('board').innerHTML = ''
+    initializeBoard()
+  }
+  const winningToken = winner()
+  if (winningToken) {
+    alert(`${winningToken} Wins!`)
+    clearGameState()
+    document.getElementById('board').innerHTML = ''
+    initializeBoard()
+  }
 }
 
 initializeBoard()
