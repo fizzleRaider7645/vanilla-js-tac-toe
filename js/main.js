@@ -121,7 +121,7 @@ const initializeBoard = () => {
 }
 
 const isDraw = () => {
-  return turns === 8 && !winner()
+  return turns === 9 && !winner()
 }
 
 const play = ([i, j]) => {
