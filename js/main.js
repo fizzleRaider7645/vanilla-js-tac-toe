@@ -8,13 +8,12 @@ const gameState = [
   ['', '', ''],
 ]
 
-const getGameStateValue = ([i, j]) => {
-  console.log(gameState[i][j])
-  return gameState[i][j]
-}
-
 const updateGameState = ([i, j], token) => {
   gameState[i][j] = token
+}
+
+const getGameStateValue = ([i, j]) => {
+  return gameState[i][j]
 }
 
 const winCombinations = [
@@ -60,6 +59,20 @@ const winCombinations = [
   ],
 ]
 
+const winner = () => {
+  let isWinner = false
+  winCombinations.forEach((combo) => {
+    const winConditionMet =
+      getGameStateValue(combo[0]) !== '' &&
+      getGameStateValue(combo[0]) === getGameStateValue(combo[1]) &&
+      getGameStateValue(combo[1]) === getGameStateValue(combo[2])
+    if (winConditionMet) {
+      isWinner = getGameStateValue(combo[0])
+    }
+  })
+  return isWinner
+}
+
 const initializeBoard = () => {
   const body = document.getElementById('body')
   body.style =
@@ -83,7 +96,7 @@ const initializeBoard = () => {
           'width:100px;border-right: 3px solid black;display:flex;border-left: none;justify-content: center;align-items: center;'
       } else if (j === 1) {
         cell.style =
-          'width:100px;border-right: 3px solid black;display:flex;justify-content: center;align-items: center;'
+          'width:100px;border-right: 3px solid black;display:flex;justify-content:center;align-items: center;'
       } else {
         cell.style =
           'width:100px;display:flex;justify-content: center;align-items: center;'
@@ -91,7 +104,6 @@ const initializeBoard = () => {
       const cellId = [i, j]
       cell.id = cellId
       cell.innerHTML = gameState[i][j]
-      // cell.innerHTML = [i, j]
       cell.onclick = () => placeToken(cellId)
       row.appendChild(cell)
     }
@@ -99,30 +111,18 @@ const initializeBoard = () => {
   }
 }
 
-const winner = () => {
-  for (let i = 0; i < winCombinations.length; i++) {
-    const combo = winCombinations[i]
-    console.log(combo)
-  }
-}
-
 const draw = () => {
-  return turns === 8
+  return turns === 8 && !winner()
 }
 
 const placeToken = ([i, j]) => {
-  console.log(winner())
-  // if (getGameStateValue([i, j])) {
-  // alert('Position Taken!')
-  // } else if (draw()) {
-  // alert('Draw!')
-  // } else {
+  if (getGameStateValue([i, j])) return
   turns += 1
   const currentUserToken = turns % 2 !== 0 ? tokens[0] : tokens[1]
   updateGameState([i, j], currentUserToken)
+  console.log(winner())
   document.getElementById('board').innerHTML = ''
   initializeBoard()
-  // }
 }
 
 initializeBoard()
